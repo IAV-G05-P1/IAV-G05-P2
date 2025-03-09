@@ -88,6 +88,7 @@ namespace UCM.IAV.Navegacion
             return costsV;
         }
 
+        //JAVIER
         // Encuentra caminos óptimos
         public List<Vertex> GetPathBFS(GameObject srcO, GameObject dstO)
         {
@@ -95,6 +96,7 @@ namespace UCM.IAV.Navegacion
             return new List<Vertex>();
         }
 
+        //JULIA
         // No encuentra caminos óptimos
         public List<Vertex> GetPathDFS(GameObject srcO, GameObject dstO)
         {
@@ -102,12 +104,14 @@ namespace UCM.IAV.Navegacion
             return new List<Vertex>();
         }
 
+        //PABLO
         public List<Vertex> GetPathAstar(GameObject srcO, GameObject dstO, Heuristic h = null)
         {
             // IMPLEMENTAR ALGORITMO A*
             return new List<Vertex>();
         }
 
+        //JODER
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
             // IMPLEMENTAR SUAVIZADO DE CAMINOS
