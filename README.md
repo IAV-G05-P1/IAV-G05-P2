@@ -16,3 +16,36 @@ Los recursos de terceros utilizados son de uso público.
 * [Kaykit Medieval Builder Pack](https://kaylousberg.itch.io/kaykit-medieval-builder-pack)
 * [Kaykit Dungeon](https://kaylousberg.itch.io/kaykit-dungeon)
 * [Kaykit Animations](https://kaylousberg.itch.io/kaykit-animations)
+
+## Pseudocódigo
+
+### BFS
+
+### DFS
+
+### A*
+```
+def GetPathAStar(startObject, endObject, heuristic):
+    start = GetVertex(startObject)
+
+    open = List()
+    open += startRecord
+    closed = List()
+
+    while length(open) > 0:
+        current = open.min()
+
+        if current.node == GetVertex(endObject): break
+
+        neighbours = graph.getNeighbours(current)
+        neighCost = graph.getNeighboursCosts(current)
+
+        for length(neighbours):
+            endNode = neighbours[i]
+            endCost = current.costSoFar + neighCost[i]
+
+            if(closed.contains(endNode)) {
+                if (endCost < endNode.costSoFar)
+            }
+
+```

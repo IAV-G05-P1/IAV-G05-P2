@@ -50,12 +50,12 @@ namespace UCM.IAV.Navegacion
             mapName = GameManager.instance.getSize() + ".map";
         }
 
-        private int GridToId(int x, int y)
+        protected override int GridToId(int x, int y)
         {
             return Math.Max(numRows, numCols) * y + x;
         }
 
-        private Vector2 IdToGrid(int id)
+        protected override Vector2 IdToGrid(int id)
         {
             Vector2 location = Vector2.zero;
             location.y = Mathf.Floor(id / numCols);

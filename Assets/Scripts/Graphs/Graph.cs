@@ -12,6 +12,7 @@ namespace UCM.IAV.Navegacion
     using UnityEngine;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Abstract class for graphs
@@ -36,6 +37,15 @@ namespace UCM.IAV.Navegacion
         // Used for getting path in frames
         public List<Vertex> path;
 
+        protected virtual int GridToId(int x, int y)
+        {
+            return 0;
+        }
+
+        protected virtual Vector2 IdToGrid(int id)
+        {
+            return new Vector2();
+        }
 
         public virtual void Start()
         {
@@ -108,6 +118,56 @@ namespace UCM.IAV.Navegacion
         public List<Vertex> GetPathAstar(GameObject srcO, GameObject dstO, Heuristic h = null)
         {
             // IMPLEMENTAR ALGORITMO A*
+            Vertex start = GetNearestVertex(srcO.transform.position);
+
+            List<Vertex> open = new List<Vertex>();
+            open.Add(start);
+            List<Vertex> closed = new List<Vertex>();
+
+            while (open.Count > 0) {
+                Vertex current = open.Min();
+
+                if (current = GetNearestVertex(dstO.transform.position))
+                    break;
+
+                Vertex[] neighbours = GetNeighbours(current);
+                float[] neighCost = GetNeighboursCosts(current);
+                Vector2 currentPos = IdToGrid(current.id);
+
+                for (int i = 0; i < neighbours.Count(); i++)
+                {
+                    Vertex endNode = neighbours[i];
+                    float endCost = costsVertices[(int)currentPos.x, (int)currentPos.y] + neighCost[i];
+
+                    if(closed.Contains(endNode))
+                    {
+                        Vector2 endPos = IdToGrid(endNode.id);
+
+                        if (endCost < costsVertices[(int)endPos.x, (int)endPos.y])
+                        {
+                            closed.Remove(endNode);
+
+                            endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
+                        }
+                    }
+                    else if (open.Contains(endNode))
+                    {
+                        Vector2 endPos = IdToGrid(endNode.id);
+                        
+                        if (endCost <= costsVertices[(int)endPos.x, (int)endPos.y])
+                        {
+                            endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
+                        }
+                    }
+                    else
+                    {
+                        //Llamada a la Heurística que no tengo preparada todavía
+                        //endNode.cost = 
+                    }
+                }
+            }
+
+
             return new List<Vertex>();
         }
 
