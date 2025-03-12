@@ -63,7 +63,9 @@ namespace UCM.IAV.Navegacion
                 case 1:
                     return ManhattanHeuristic;
                 case 2:
-                    return ManhattanHeuristic;
+                    return EuclideanHeuristic;
+                case 3:
+                    return SquareHeuristic;
                 default:
                     return ManhattanHeuristic;
             }
@@ -76,6 +78,21 @@ namespace UCM.IAV.Navegacion
             return (float)(Math.Sqrt(Math.Pow(posA.x - posB.x, 2)) + Math.Sqrt(Math.Pow(posA.y - posB.y, 2)));
         }
 
+        float EuclideanHeuristic(Vertex a, Vertex b)
+        {
+            Vector2 posA = IdToGrid(a.id);
+            Vector2 posB = IdToGrid(b.id);
+
+            return (float)Math.Sqrt(Math.Pow(posA.x - posB.x, 2) + Math.Pow(posA.y - posB.y, 2));
+        }
+
+        float SquareHeuristic(Vertex a, Vertex b)
+        {
+            Vector2 posA = IdToGrid(a.id);
+            Vector2 posB = IdToGrid(b.id);
+
+            return (float)(Math.Pow(posA.x - posB.x, 2) + Math.Pow(posA.y - posB.y, 2));
+        }
         #endregion
 
 
@@ -170,7 +187,7 @@ namespace UCM.IAV.Navegacion
                 curry = open.Min(rec => rec.node);
                 current = open.Find(rec => rec.node == curry);
 
-                if (current.node = goal)
+                if (current.node == goal)
                 {
                     onGoal = true;
                 }
@@ -248,9 +265,6 @@ namespace UCM.IAV.Navegacion
                 while (current.node != start)
                 {
                     path.Add(current.node);
-                    Debug.Log(current.node.id);
-                    Debug.Log(current.costSoFar);
-                    Debug.Log(current.fromNode.id);
                     current = closed.Find(rec => rec.node == current.fromNode);
                 }
 

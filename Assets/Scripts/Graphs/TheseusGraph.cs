@@ -102,7 +102,7 @@ namespace UCM.IAV.Navegacion
                 {
                     case TesterGraphAlgorithm.ASTAR:
                         if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, graph.GetHeuristic(1)); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
-                        else path = graph.GetPathAstar(srcObj, dstObj, null); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
+                        else path = graph.GetPathAstar(srcObj, dstObj, graph.GetHeuristic(2)); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
                         break;
                     default:
                     case TesterGraphAlgorithm.BFS:
