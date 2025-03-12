@@ -37,6 +37,12 @@ namespace UCM.IAV.Navegacion
         // Used for getting path in frames
         public List<Vertex> path;
 
+        public struct NodeRecord
+        {
+            public Vertex node { get; set; }
+            public float costSoFar { get; set; }
+        }
+
         protected virtual int GridToId(int x, int y)
         {
             return 0;
@@ -120,50 +126,65 @@ namespace UCM.IAV.Navegacion
             // IMPLEMENTAR ALGORITMO A*
             Vertex start = GetNearestVertex(srcO.transform.position);
 
-            List<Vertex> open = new List<Vertex>();
-            open.Add(start);
-            List<Vertex> closed = new List<Vertex>();
+            NodeRecord startRec = new NodeRecord();
+            startRec.node = start;
+            startRec.costSoFar = 0;
+
+            List<NodeRecord> open = new List<NodeRecord>();
+            open.Add(startRec);
+            List<NodeRecord> closed = new List<NodeRecord>();
 
             while (open.Count > 0) {
-                Vertex current = open.Min();
+                Vertex curry = open.Min(rec => rec.node);
+                NodeRecord current = open.Find(rec => rec.node == curry);
 
-                if (current = GetNearestVertex(dstO.transform.position))
+                if (current.node = GetNearestVertex(dstO.transform.position))
                     break;
 
-                Vertex[] neighbours = GetNeighbours(current);
-                float[] neighCost = GetNeighboursCosts(current);
-                Vector2 currentPos = IdToGrid(current.id);
+                Vertex[] neighbours = GetNeighbours(current.node);
+                float[] neighCost = GetNeighboursCosts(current.node);
+                Vector2 currentPos = IdToGrid(current.node.id);
+
+                NodeRecord endRec;
 
                 for (int i = 0; i < neighbours.Count(); i++)
                 {
                     Vertex endNode = neighbours[i];
-                    float endCost = costsVertices[(int)currentPos.x, (int)currentPos.y] + neighCost[i];
+                    float endCost = current.costSoFar + neighCost[i];
 
-                    if(closed.Contains(endNode))
+                    if(closed.Any(rec => rec.node == endNode))
                     {
+                        endRec = closed.Find(rec => rec.node == endNode);
                         Vector2 endPos = IdToGrid(endNode.id);
 
-                        if (endCost < costsVertices[(int)endPos.x, (int)endPos.y])
+                        if (endCost < endRec.costSoFar)
                         {
-                            closed.Remove(endNode);
+                            closed.Remove(endRec);
 
-                            endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
+                            //endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
                         }
                     }
-                    else if (open.Contains(endNode))
+                    else if (open.Any(rec => rec.node == endNode))
                     {
+                        endRec = open.Find(rec => rec.node == endNode);
                         Vector2 endPos = IdToGrid(endNode.id);
                         
-                        if (endCost <= costsVertices[(int)endPos.x, (int)endPos.y])
+                        if (endCost < endRec.costSoFar)
                         {
-                            endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
+                            //endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
                         }
                     }
                     else
                     {
+                        endRec = new NodeRecord();
+                        endRec.node = endNode;
+
                         //Llamada a la Heurística que no tengo preparada todavía
                         //endNode.cost = 
                     }
+
+                    endRec
+
                 }
             }
 
