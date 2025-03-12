@@ -13,6 +13,7 @@ namespace UCM.IAV.Navegacion
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System;
 
     /// <summary>
     /// Abstract class for graphs
@@ -41,6 +42,7 @@ namespace UCM.IAV.Navegacion
         {
             public Vertex node { get; set; }
             public float costSoFar { get; set; }
+            public Vertex fromNode { get; set; }
         }
 
         protected virtual int GridToId(int x, int y)
@@ -52,6 +54,30 @@ namespace UCM.IAV.Navegacion
         {
             return new Vector2();
         }
+
+        #region Heurísticas
+        public Heuristic GetHeuristic(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return ManhattanHeuristic;
+                case 2:
+                    return ManhattanHeuristic;
+                default:
+                    return ManhattanHeuristic;
+            }
+        }
+        float ManhattanHeuristic(Vertex a, Vertex b)
+        {
+            Vector2 posA = IdToGrid(a.id);
+            Vector2 posB = IdToGrid(b.id);
+
+            return (float)(Math.Sqrt(Math.Pow(posA.x - posB.x, 2)) + Math.Sqrt(Math.Pow(posA.y - posB.y, 2)));
+        }
+
+        #endregion
+
 
         public virtual void Start()
         {
@@ -125,71 +151,113 @@ namespace UCM.IAV.Navegacion
         {
             // IMPLEMENTAR ALGORITMO A*
             Vertex start = GetNearestVertex(srcO.transform.position);
+            Vertex goal = GetNearestVertex(dstO.transform.position);
 
             NodeRecord startRec = new NodeRecord();
             startRec.node = start;
             startRec.costSoFar = 0;
+            startRec.fromNode = null;
 
             List<NodeRecord> open = new List<NodeRecord>();
             open.Add(startRec);
             List<NodeRecord> closed = new List<NodeRecord>();
+            Vertex curry = start;
+            NodeRecord current = startRec;
 
-            while (open.Count > 0) {
-                Vertex curry = open.Min(rec => rec.node);
-                NodeRecord current = open.Find(rec => rec.node == curry);
+            bool onGoal = false;
 
-                if (current.node = GetNearestVertex(dstO.transform.position))
-                    break;
+            while (open.Count > 0 && !onGoal) {
+                curry = open.Min(rec => rec.node);
+                current = open.Find(rec => rec.node == curry);
 
-                Vertex[] neighbours = GetNeighbours(current.node);
-                float[] neighCost = GetNeighboursCosts(current.node);
-                Vector2 currentPos = IdToGrid(current.node.id);
-
-                NodeRecord endRec;
-
-                for (int i = 0; i < neighbours.Count(); i++)
+                if (current.node = goal)
                 {
-                    Vertex endNode = neighbours[i];
-                    float endCost = current.costSoFar + neighCost[i];
+                    onGoal = true;
+                }
+                else
+                {
+                    Vertex[] neighbours = GetNeighbours(current.node);
+                    float[] neighCost = GetNeighboursCosts(current.node);
 
-                    if(closed.Any(rec => rec.node == endNode))
+                    for (int i = 0; i < neighbours.Count(); i++)
                     {
-                        endRec = closed.Find(rec => rec.node == endNode);
-                        Vector2 endPos = IdToGrid(endNode.id);
+                        NodeRecord endRec;
 
-                        if (endCost < endRec.costSoFar)
+                        Vertex endNode = neighbours[i];
+                        float endCost = current.costSoFar + neighCost[i];
+                        float endHeuristic = -1;
+
+                        //Comprueba si está en la lista de cerrados para ver si hay una ruta mejor
+                        if (closed.Any(rec => rec.node == endNode))
                         {
-                            closed.Remove(endRec);
+                            endRec = closed.Find(rec => rec.node == endNode);
 
-                            //endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
+                            if (endCost < endRec.costSoFar)
+                            {
+                                closed.Remove(endRec);
+
+                                endHeuristic = endNode.cost - endRec.costSoFar;
+                            }
+                        }
+                        //Comprueba si está en la lista de abiertos y hay una ruta mejor
+                        else if (open.Any(rec => rec.node == endNode))
+                        {
+                            endRec = open.Find(rec => rec.node == endNode);
+
+                            if (endCost < endRec.costSoFar)
+                            {
+                                endHeuristic = endNode.cost - endRec.costSoFar;
+                            }
+                        }
+                        else
+                        {
+                            endRec = new NodeRecord();
+                            endRec.node = endNode;
+
+                            endHeuristic = h(endNode, goal);
+                        }
+
+                        //Si la heuristica no es -1 signifíca que el camino es óptimo
+                        if (endHeuristic >= 0)
+                        {
+                            endRec.costSoFar = endCost;
+                            endRec.fromNode = current.node;
+                            endNode.cost = endCost + endHeuristic;
+
+                            //Comprueba que no esté ya en la lista de abiertos para añadirlo
+                            if (!open.Any(rec => rec.node == endNode))
+                            {
+                                open.Add(endRec);
+                            }
                         }
                     }
-                    else if (open.Any(rec => rec.node == endNode))
-                    {
-                        endRec = open.Find(rec => rec.node == endNode);
-                        Vector2 endPos = IdToGrid(endNode.id);
-                        
-                        if (endCost < endRec.costSoFar)
-                        {
-                            //endNode.cost = neighCost[i] - costsVertices[(int)endPos.x, (int)endPos.y];
-                        }
-                    }
-                    else
-                    {
-                        endRec = new NodeRecord();
-                        endRec.node = endNode;
 
-                        //Llamada a la Heurística que no tengo preparada todavía
-                        //endNode.cost = 
-                    }
-
-                    endRec
-
+                    open.Remove(current);
+                    closed.Add(current);
                 }
             }
 
+            if (current.node != goal)
+            {
+                return null;
+            }
+            else
+            {
+                List<Vertex> path = new List<Vertex>();
 
-            return new List<Vertex>();
+                while (current.node != start)
+                {
+                    path.Add(current.node);
+                    Debug.Log(current.node.id);
+                    Debug.Log(current.costSoFar);
+                    Debug.Log(current.fromNode.id);
+                    current = closed.Find(rec => rec.node == current.fromNode);
+                }
+
+                path.Reverse();
+
+                return path;
+            }
         }
 
         //JODER

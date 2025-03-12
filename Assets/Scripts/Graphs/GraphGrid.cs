@@ -63,6 +63,7 @@ namespace UCM.IAV.Navegacion
             return location;
         }
 
+       
         private void LoadMap(string filename)
         {
             string path;
