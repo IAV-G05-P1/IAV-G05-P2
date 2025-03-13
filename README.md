@@ -74,10 +74,16 @@ def pathfindDijkstra(graph, start, end):
 ```
 def GetPathAStar(startObject, endObject, heuristic):
     start = GetVertex(startObject)
+    goal = GetVertex(endObject)
 
-    open = List()
+    startRec = new NodeRecord()
+    startRec.node = start
+    startRec.costSoFar = 0
+    startRec.fromNode = null
+
+    open = List<NodeRecord>()
     open += startRecord
-    closed = List()
+    closed = List<ListRecord>()
 
     while length(open) > 0:
         current = open.min()
@@ -91,8 +97,80 @@ def GetPathAStar(startObject, endObject, heuristic):
             endNode = neighbours[i]
             endCost = current.costSoFar + neighCost[i]
 
-            if(closed.contains(endNode)) {
-                if (endCost < endNode.costSoFar)
-            }
+            if closed.contains(endNode):
 
+                endRec = closed.Find(endNode)
+
+                if endCost < endNode.costSoFar:
+                    closed -= endRec
+                    endHeuristic = endNode.estimate - endRec.costSoFar
+                else :
+                    continue
+            
+            else if open.contains(endNode):
+
+                endRec = closed.Find(endNode)
+
+                if endCost < endNode.costSoFar:
+                    endHeuristic = endNode.estimate - endRec.costSoFar
+                else :
+                    continue
+            
+            else:
+                endRec = new NodeRecord()
+                endRec.node = endNode;
+
+                endHeuristic = [Heuristic Function]
+
+            endRec.cosSoFar = endCost;
+            endRec.fromNode = curren.node;
+            endNode.estimate = endCost + endHeuristic
+
+            if !open.contains(endRec):
+                open += endRec 
+
+        open -= current
+        closed += current
+
+    if current.node != start:
+        return null
+
+    else:
+        path = new List<Vertex>
+
+        while current.node != start:
+            path += current.node
+            current = closed.Find(current.fromNode)
+
+        path.reverse()
+
+        return path;
+```
+
+#### Heurística
+
+```
+def ManhattanHeuristic(a, b)
+{
+    posA = a.position;
+    posB = b.position;
+
+    return (sqrt(sq(posA.x-posB.x)) + sqrt(sq(posA.y-posB.y)));
+}
+
+float EuclideanHeuristic(Vertex a, Vertex b)
+{
+    posA = a.position;
+    posB = b.position;
+
+    return sqrt(sq(posA.x-posB.x) + sq(posA.y-posB.y))
+}
+
+float SquareHeuristic(Vertex a, Vertex b)
+{
+    posA = a.position;
+    posB = b.position;
+
+    return (sq(posA.x-posB.x) + sq(posA.y-posB.y))
+}
 ```
