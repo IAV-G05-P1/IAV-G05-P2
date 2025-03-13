@@ -17,6 +17,10 @@ Los recursos de terceros utilizados son de uso público.
 * [Kaykit Dungeon](https://kaylousberg.itch.io/kaykit-dungeon)
 * [Kaykit Animations](https://kaylousberg.itch.io/kaykit-animations)
 
+## Documentación
+
+El problema a resolver que se nos presenta, es que debemos implementar principalmente un algoritmo que calcule la ruta más optima para llegar a un punto, y esto se puede aplicar al jugador (cuando debe de manera automática ir a la meta) y a los enemigos (cuando ven al jugador, deben perseguirlo). A continuación se presentan diferentes partes del algoritmo en forma de pseudocódigos.
+
 ## Pseudocódigo
 
 ### BFS
@@ -95,4 +99,29 @@ def GetPathAStar(startObject, endObject, heuristic):
                 if (endCost < endNode.costSoFar)
             }
 
+```
+### Smooth
+
+Se encarga de hacer que el recorrido sea lo más limpio posible, haciendo que los personajes sigan rutas más controladas, fijándose en que no se estén chocando con los muros y que acorten las distancias en un camino.
+
+```
+function Smooth(inputPath: List<Vertex>) -> List<Vertex>:
+	# Si el camino es de 2 nodos de longitud solo, no podemos suavizarlo, así que toca retornar vacío
+	if inputPath.length == 2: return inputPath
+
+	outputPath = [inputPath[0]]
+
+	inputIndex: int = 2
+
+	while inputIndex < inputPath.length -1:
+		formPt = outputPath[ outputPath.length - 1 ]
+		toPt = inputPath[inputIndex]
+		if not rayClear(fromPt, toPt):
+			outputPath += inputPath[inputIndex - 1]
+
+		inputIndex++
+
+	outputPath += inputPath(inputPath.length - 1)
+
+	return outputPath	
 ```
