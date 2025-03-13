@@ -20,7 +20,54 @@ Los recursos de terceros utilizados son de uso público.
 ## Pseudocódigo
 
 ### BFS
+```
+def pathfindDijkstra(graph, start, end):
+ 
+ start = GetVertex(startObject)
 
+ startRecord = new NodeRecord()
+ startRecord.node = start
+ startRecord.connection = None
+ startRecord.costSoFar = 0
+
+ open = PathfindingList()
+ open += startRecord
+ closed = PathfindingList()
+
+ while length(open) > 0:
+
+    current = open.smallestElement()
+
+    if current.node == goal: break
+
+    neighbours = graph.GetNeighbours(current)
+
+    for neighbours.size:
+ 
+        endNode = connection.getToNode()
+        endNodeCost = current.costSoFar + connection.getCost()
+
+        if !closed.contains(endNode):
+            if open.contains(endNode):
+                
+                endNodeRecord = open.find(endNode)
+
+                if endNodeRecord.cost <= endNodeCost: continue                
+            else:
+                endNodeRecord = new NodeRecord()
+                endNodeRecord.node = endNode
+                endNodeRecord.cost = endNodeCost
+                endNodeRecord.connection = connection
+
+                if not open.contains(endNode):
+                open += endNodeRecord
+
+        open -= current
+        closed += current
+
+    if current.node = goal:
+        return path = []
+``` 
 ### DFS
 
 ### A*

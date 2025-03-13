@@ -152,7 +152,85 @@ namespace UCM.IAV.Navegacion
         public List<Vertex> GetPathBFS(GameObject srcO, GameObject dstO)
         {
             // IMPLEMENTAR ALGORITMO BFS
-            return new List<Vertex>();
+            Vertex start = GetNearestVertex(srcO.transform.position);
+            Vertex goal = GetNearestVertex(dstO.transform.position);
+            
+            NodeRecord startRec = new NodeRecord();
+            startRec.node = start;
+            startRec.costSoFar = 0;
+            startRec.fromNode = null;
+
+            List<NodeRecord> open = new List<NodeRecord>();
+            open.Add(startRec);
+            List<NodeRecord> closed = new List<NodeRecord>();
+            Vertex curry = start;
+            NodeRecord current = startRec;
+
+            bool onGoal = false;            
+
+            while (!onGoal && open.Count >0) {
+                curry = open.Min(rec => rec.node);
+                current = open.Find(rec => rec.node == curry);
+
+                if (current.node == goal)
+                {
+                    onGoal = true;
+                }
+                else
+                {
+                    Vertex[] neighbours = GetNeighbours(current.node);
+                    float[] neighCost = GetNeighboursCosts(current.node);
+
+                    for (int i = 0; i < neighbours.Count(); i++)
+                    {                        
+                        Vertex endNode = neighbours[i];
+                        float endCost = current.costSoFar + neighCost[i];
+
+                        //Si no está entre los nodos cerrados
+                        if (!closed.Any(rec => rec.node == endNode))
+                        {                            
+                            //Si está en los nodos abiertos
+                            if (open.Any(rec => rec.node == endNode))
+                            {
+                                NodeRecord endRec = open.Find(rec => rec.node == endNode);
+                                //Si tiene un coste menor al asignado, se sustituye
+                                if (endCost < endRec.costSoFar)
+                                {
+                                    endRec.costSoFar = endCost;
+                                    endRec.fromNode = current.node;
+                                }
+                            }
+                            //Si ni está entre los nodos cerrados o abiertos se añade
+                            else
+                            {
+                                NodeRecord endRec = new NodeRecord();
+                                endRec.node = endNode;
+                                endRec.fromNode = current.node;
+                                endRec.costSoFar = endCost;
+                                open.Add(endRec);
+                            }
+                        }
+                    }
+                }
+                if (onGoal)
+                {
+                    List<Vertex> path = new List<Vertex>();
+
+                    while (current.node != start)
+                    {
+                        path.Add(current.node);
+                        current = closed.Find(rec => rec.node == current.fromNode);
+                    }
+
+                    path.Reverse();
+
+                    return path;
+                }
+                open.Remove(current);
+                closed.Add(current);
+            }
+
+            return null;
         }
 
         //JULIA
