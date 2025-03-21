@@ -352,14 +352,70 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        //JODER
+        //JOSE
+        public bool RayClear(Vertex fromPt, Vertex toPt)
+        {
+            float rayDrawBroad = 0.2f; //Cambiar el valor del parametro puede interferir en si cabe o no el objeto por el camino,
+                                       //asi q cuanqto mas pequeño es el valor, mejor puede sortear los obstaculos
+            Vector3 direction = toPt.transform.position - fromPt.transform.position;
+            float distance = direction.magnitude;
+
+
+            Vector3 origin1 = fromPt.transform.position + Vector3.up * 0.5f
+                + Vector3.forward * rayDrawBroad + Vector3.right * -rayDrawBroad;
+
+            Vector3 origin2 = fromPt.transform.position + Vector3.up * 0.5f
+                + Vector3.forward * -rayDrawBroad + Vector3.right * rayDrawBroad;
+
+            Vector3 origin3 = fromPt.transform.position + Vector3.up * 0.5f
+                + Vector3.forward * -rayDrawBroad + Vector3.right * -rayDrawBroad;
+
+            Vector3 origin4 = fromPt.transform.position + Vector3.up * 0.5f
+                + Vector3.forward * rayDrawBroad + Vector3.right * rayDrawBroad;
+
+
+
+            Vector3 dir1 = (toPt.transform.position + Vector3.forward * rayDrawBroad
+                + Vector3.right * -rayDrawBroad) - origin1;
+
+            Vector3 dir2 = (toPt.transform.position + Vector3.forward * -rayDrawBroad
+                + Vector3.right * rayDrawBroad) - origin2;
+
+            Vector3 dir3 = (toPt.transform.position + Vector3.forward * -rayDrawBroad
+                + Vector3.right * -rayDrawBroad) - origin3;
+
+            Vector3 dir4 = (toPt.transform.position + Vector3.forward * rayDrawBroad
+                + Vector3.right * rayDrawBroad) - origin4;
+
+
+            return (!Physics.Raycast(origin1, dir1, distance) && !Physics.Raycast(origin2, dir2, distance) &&
+                    !Physics.Raycast(origin3, dir3, distance) && !Physics.Raycast(origin4, dir4, distance));
+        }
+
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
-            // IMPLEMENTAR SUAVIZADO DE CAMINOS
+            if (inputPath.Count == 2) return inputPath; // No se puede suavizar porque es un camino pequeño
 
-            List<Vertex> outputPath = new List<Vertex>();
+            List<Vertex> outputPath = new List<Vertex> { inputPath[0] };
+            int inputIndex = 2;
 
-            return outputPath; 
+            while (inputIndex < inputPath.Count - 1)
+            {
+                Vertex fromPt = outputPath[outputPath.Count - 1];
+                Vertex toPt = inputPath[inputIndex];
+
+                //Si en el camino hay obstaculos, no se recorta
+
+                if (!RayClear(fromPt, toPt))
+                {
+                    outputPath.Add(inputPath[inputIndex - 1]);
+                }
+
+                inputIndex++;
+            }
+
+            outputPath.Add(inputPath[inputPath.Count - 1]);
+            return outputPath;
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
