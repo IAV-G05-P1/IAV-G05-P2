@@ -19,6 +19,12 @@ namespace UCM.IAV.Movimiento
 
         public TheseusGraph graph;
 
+        public void Start()
+        {
+            if (graph == null)
+                graph = GameManager.instance.GetTG();
+        }
+
         override public void Update()
         {
             sigNodo = graph.GetNextNode();

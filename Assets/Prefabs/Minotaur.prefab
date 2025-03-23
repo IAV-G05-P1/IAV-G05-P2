@@ -468,9 +468,11 @@ GameObject:
   - component: {fileID: 5856985828648263928}
   - component: {fileID: 5856985828648263929}
   - component: {fileID: 4308355810874672084}
+  - component: {fileID: 4020885183984745869}
   - component: {fileID: 8357271194336293764}
   - component: {fileID: 8553910425318934758}
   - component: {fileID: 424862365580650940}
+  - component: {fileID: -8444168707757539425}
   m_Layer: 7
   m_Name: Minotaur
   m_TagString: Untagged
@@ -586,6 +588,24 @@ MonoBehaviour:
   velocidad: {x: 0, y: 0, z: 0}
   rotacion: 0
   orientacion: 0
+--- !u!114 &4020885183984745869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ffa41cffd326f64b856316d349eca5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  peso: 1
+  prioridad: 1
+  objetivo: {fileID: 5587432493576105249, guid: c391d0bafd410864ca5d0cc1bd083ed3,
+    type: 3}
+  maxTime: 2
+  minTime: 1
 --- !u!114 &8357271194336293764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,6 +642,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13684ffe492191840b7059313990e5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8444168707757539425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ced513ae5c269e4aa20364c475dc698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  peso: 1
+  prioridad: 1
+  objetivo: {fileID: 5587432493576105249, guid: c391d0bafd410864ca5d0cc1bd083ed3,
+    type: 3}
+  graph: {fileID: 0}
 --- !u!1 &6227627562668922387
 GameObject:
   m_ObjectHideFlags: 0

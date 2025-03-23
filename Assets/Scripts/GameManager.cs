@@ -149,7 +149,11 @@ namespace UCM.IAV.Movimiento
             if (player == null) player = GameObject.Find("Avatar");
             return player;
         }
-
+        public TheseusGraph GetTG()
+        {
+            //if (theseusGraph == null) theseusGraph = GameObject.Find("Avatar");
+            return theseusGraph;
+        }
         public void RestartScene()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);

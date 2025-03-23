@@ -96,7 +96,7 @@ namespace UCM.IAV.Navegacion
                 if (srcObj == null) srcObj = GameManager.instance.GetPlayer();
                 if (dstObj == null) dstObj = GameManager.instance.GetExitNode();
 
-                //path = new List<Vertex>();
+                path = new List<Vertex>();
 
                 switch (algorithm)
                 {

@@ -214,7 +214,7 @@ namespace UCM.IAV.Navegacion
                 }
                 if (onGoal)
                 {
-                    List<Vertex> path = new List<Vertex>();
+                    path = new List<Vertex>();
 
                     while (current.node != start)
                     {
@@ -222,7 +222,8 @@ namespace UCM.IAV.Navegacion
                         current = closed.Find(rec => rec.node == current.fromNode);
                     }
 
-                    path.Reverse();
+                    //path.Add(start);
+                    //path.Reverse();
 
                     return path;
                 }
@@ -305,15 +306,15 @@ namespace UCM.IAV.Navegacion
             // Si se alcanzó el objetivo, reconstruimos el camino
             if (onGoal)
             {
-                List<Vertex> path = new List<Vertex>();
+                path = new List<Vertex>();
                 while (current.node != start)
                 {
                     path.Add(current.node);
                     current = closed.Find(rec => rec.node == current.fromNode); // Volver al nodo anterior
                 }
 
-                path.Add(start); // Añadir el nodo de inicio al camino
-                path.Reverse(); // Revertir el camino para que vaya de inicio a fin
+                //path.Add(start); // Añadir el nodo de inicio al camino
+                //path.Reverse(); // Revertir el camino para que vaya de inicio a fin
 
                 return path;
             }
@@ -419,7 +420,7 @@ namespace UCM.IAV.Navegacion
             }
             else
             {
-                List<Vertex> path = new List<Vertex>();
+                path = new List<Vertex>();
 
                 while (current.node != start)
                 {
@@ -427,7 +428,8 @@ namespace UCM.IAV.Navegacion
                     current = closed.Find(rec => rec.node == current.fromNode);
                 }
 
-                path.Reverse();
+                //path.Add(start);
+                //path.Reverse();
 
                 return path;
             }
@@ -475,28 +477,29 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
-            if (inputPath.Count == 2) return inputPath; // No se puede suavizar porque es un camino pequeño
+            if (inputPath == null || inputPath.Count == 0) return inputPath; // No se puede suavizar porque es un camino pequeño
 
-            List<Vertex> outputPath = new List<Vertex> { inputPath[0] };
+            path = new List<Vertex>();
+            path.Add(inputPath[0]);
             int inputIndex = 2;
 
             while (inputIndex < inputPath.Count - 1)
             {
-                Vertex fromPt = outputPath[outputPath.Count - 1];
+                Vertex fromPt = path[path.Count - 1];
                 Vertex toPt = inputPath[inputIndex];
 
                 //Si en el camino hay obstaculos, no se recorta
 
                 if (!RayClear(fromPt, toPt))
                 {
-                    outputPath.Add(inputPath[inputIndex - 1]);
+                    path.Add(inputPath[inputIndex - 1]);
                 }
 
                 inputIndex++;
             }
 
-            outputPath.Add(inputPath[inputPath.Count - 1]);
-            return outputPath;
+            path.Add(inputPath[inputPath.Count - 1]);
+            return path;
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
