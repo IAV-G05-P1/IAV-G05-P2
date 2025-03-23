@@ -233,12 +233,93 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
-        //JULIA
+        //JULIAN
         // No encuentra caminos óptimos
         public List<Vertex> GetPathDFS(GameObject srcO, GameObject dstO)
-        {
-            // IMPLEMENTAR ALGORITMO DFS
-            return new List<Vertex>();
+        {// Obtener los vértices más cercanos a los objetos de origen y destino
+            Vertex start = GetNearestVertex(srcO.transform.position);
+            Vertex goal = GetNearestVertex(dstO.transform.position);
+
+            // Pila para DFS y lista de nodos visitados
+            Stack<NodeRecord> stack = new Stack<NodeRecord>();
+            List<NodeRecord> closed = new List<NodeRecord>();
+
+            // Registro del nodo de inicio
+            NodeRecord startRec = new NodeRecord();
+            startRec.node = start;
+            startRec.costSoFar = 0;
+            startRec.fromNode = null;
+
+            stack.Push(startRec);
+
+            // Variables de control
+            NodeRecord current = startRec;
+            bool onGoal = false;
+
+            // Comienza la búsqueda DFS
+            while (stack.Count > 0 && !onGoal)
+            {
+                current = stack.Pop(); // Obtener el siguiente nodo de la pila
+
+                // Si el nodo ya fue visitado, lo omitimos
+                if (closed.Any(rec => rec.node == current.node))
+                {
+                    continue;
+                }
+
+                // Marcamos el nodo como visitado
+                closed.Add(current);
+
+                // Si hemos llegado al objetivo, terminamos
+                if (current.node == goal)
+                {
+                    onGoal = true;
+                }
+                else
+                {
+                    // Conseguimos los vecinos del nodo actual
+                    Vertex[] neighbours = GetNeighbours(current.node);
+                    float[] neighCost = GetNeighboursCosts(current.node);
+
+                    // Exploramos cada vecino
+                    for (int i = 0; i < neighbours.Length; i++)
+                    {
+                        Vertex endNode = neighbours[i];
+                        float endCost = current.costSoFar + neighCost[i];
+
+                        // Si el vecino no ha sido visitado
+                        if (!closed.Any(rec => rec.node == endNode))
+                        {
+                            NodeRecord endRec = new NodeRecord();
+                            endRec.node = endNode;
+                            endRec.fromNode = current.node;
+                            endRec.costSoFar = endCost;
+
+                            // Añadir el vecino a la pila para explorarlo
+                            stack.Push(endRec);
+                        }
+                    }
+                }
+            }
+
+            // Si se alcanzó el objetivo, reconstruimos el camino
+            if (onGoal)
+            {
+                List<Vertex> path = new List<Vertex>();
+                while (current.node != start)
+                {
+                    path.Add(current.node);
+                    current = closed.Find(rec => rec.node == current.fromNode); // Volver al nodo anterior
+                }
+
+                path.Add(start); // Añadir el nodo de inicio al camino
+                path.Reverse(); // Revertir el camino para que vaya de inicio a fin
+
+                return path;
+            }
+
+            // Si no se encontró un camino
+            return null;
         }
 
         //PABLO
