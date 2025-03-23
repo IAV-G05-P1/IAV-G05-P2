@@ -10,6 +10,9 @@ Federico Peinado, autor de la documentación, código y recursos de este trabajo
 Sobre esto hay quien implementa el A* con una estructura de registro de nodo muy simple (el identificador del nodo y el coste f), sólo usa lista de apertura, se apoya en tener toda la información completa del grafo a mano (costes incluidos) y como estructura de datos auxiliar usa una cola de prioridad muy simple.
 Según el pseudocódigo que plantea Millington, la estructura de registro de nodo es más rica (identificador del nodo, conexión con el nodo padre, coste g y coste f), se usa una lista de apertura y una lista de cierre, no se asume que toda la información del grafo esté disponible y la cola de prioridad se puede implementar con PriorityQueue<TElement, TPriority> (estructura que se encuentra en el espacio de nombres System.Collections.Generic y fue introducida en .NET 6) o con un BinaryHeap como este: https://github.com/NikolajLeischner/csharp-binary-heap.
 
+## Vídeo demostración
+Enlace al vídeo de demostración: https://youtu.be/GaMpvTavebI
+
 ## Referencias
 Los recursos de terceros utilizados son de uso público.
 * *AI for Games*, Ian Millington.
